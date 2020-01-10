@@ -1,0 +1,13 @@
+{
+    "glsl-canvas.textures": {
+        "0": "./data/texture.png",
+    },
+    "glsl-canvas.uniforms": {
+        "u_scale": 0.5,
+        "u_minimumDistance": 0.8,
+        "u_intensity": 0.5,
+        "u_showDots": false,
+        "u_showGrid": false,
+    },
+    "glsl-canvas.useCompactFormatter": false
+}
