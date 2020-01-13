@@ -10,15 +10,15 @@ float rand(in vec2 st) {
     return fract(sin(dot(st, vec2(12.9898, 4.1414))) * 43758.5453);
 }
 
-float noise(vec2 p){
-	vec2 ip = floor(p);
-	vec2 u = fract(p);
-	u = u*u*(3.0-2.0*u);
-	
-	float res = mix(
-		mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
-		mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
-	return res*res;
+float noise(vec2 p) {
+    vec2 ip = floor(p);
+    vec2 u = fract(p);
+    u = u * u * (3.0 - 2.0 * u);
+    
+    float res =
+    mix(mix(rand(ip), rand(ip + vec2(1.0, 0.0)), u.x),
+    mix(rand(ip + vec2(0.0, 1.0)), rand(ip + vec2(1.0, 1.0)), u.x), u.y);
+    return res * res;
 }
 
 #define NUM_OCTAVES 5
@@ -40,36 +40,41 @@ float fbm(in vec2 _st) {
 const vec2 center = vec2(0.5);
 
 vec4 program() {
-    vec2 st = uv * 9.;
-    vec3 color = vec3(1.0);
-    
+
     float t = sin(u_time);
     float at = abs(t);
+    float nt = u_time * 0.05;
 
-    vec2 q = vec2(
-        fbm(st + vec2(0., 0.)),
-        fbm(st + vec2(5.2, 1.3))
-    );
-    q *= 4. * at;
+    float scale = 4.;
+    float offset = 1.;
 
-    vec2 r = vec2(
-        fbm(st + q + vec2(3.7, 5.6)),
-        fbm(st + q + vec2(7.1, 4.8))
-    );
-    r *= 4. * at;
+    vec2 st = uv * scale + offset;
+    vec3 color = vec3(1.0);
+    
+    
+    vec2 q = vec2(fbm(st + vec2(0.0, 0.0)), fbm(st + vec2(5.2, 1.3)));
+    q *= 30.5; // Change me
+    
+    // Middle layer uses scaled-down-time
+    vec2 r = vec2(fbm(st + q + vec2(3.7, 5.6) * nt), fbm(st + q + vec2(7.1, 4.8)));
+    r *= 1.3; // Change me
+    
+    vec2 s = vec2(fbm(st + r + vec2(1.6, 7.2)), fbm(st + r + vec2(4.5, 4.7)));
+    s *= 2.; // Change me
 
-    vec2 s = vec2(
-        fbm(st + r + vec2(1.6, 7.2)),
-        fbm(st + r + vec2(4.5, 4.7))
-    );
-    s *= 4. * at;
+    float grey = fbm(st * fbm(st + s));
+    color *= grey;
+    
+    float dis = t * 0.5;
+    dis = 0.0;
+    
+    color.r *= fbm(q + dis);
+    color.g *= fbm(r + dis);
+    color.b *= fbm(s + dis);
 
-    color *= fbm(st * fbm(st + s) );
-    color.r *= fbm(q);
-    color.g *= fbm(r);
-    color.b *= fbm(s);
-
-    color *= fbm(q * r * at);
-
+    color *= 4.; // Change me
+    
+    // color *= fbm(q + grey + nt) * 3.5;
+    
     return vec4(color, 1.0);
 }

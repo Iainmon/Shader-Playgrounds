@@ -15,8 +15,8 @@ int intensity(vec3 color);
 
 const vec2 center = vec2(0.5);
 
-const int radius = 15;
-const int intensities = 20;
+const int radius = 9;
+const int intensities = 50;
 
 vec4 program() {
     
