@@ -53,11 +53,11 @@ vec4 program() {
     
     
     vec2 q = vec2(fbm(st + vec2(0.0, 0.0)), fbm(st + vec2(5.2, 1.3)));
-    q *= 30.5; // Change me
+    q *= 1.5; // Change me
     
     // Middle layer uses scaled-down-time
     vec2 r = vec2(fbm(st + q + vec2(3.7, 5.6) * nt), fbm(st + q + vec2(7.1, 4.8)));
-    r *= 1.3; // Change me
+    r *= 1.; // Change me
     
     vec2 s = vec2(fbm(st + r + vec2(1.6, 7.2)), fbm(st + r + vec2(4.5, 4.7)));
     s *= 2.; // Change me
@@ -71,6 +71,7 @@ vec4 program() {
     color.r *= fbm(q + dis);
     color.g *= fbm(r + dis);
     color.b *= fbm(s + dis);
+
 
     color *= 4.; // Change me
     
